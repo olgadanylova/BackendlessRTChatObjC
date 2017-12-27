@@ -7,6 +7,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.delegate = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+    });
 }
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {    

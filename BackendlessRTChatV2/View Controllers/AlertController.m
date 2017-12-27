@@ -7,16 +7,22 @@
     [super viewDidLoad];
 }
 
-+(void)createNewChatAlert:(id)target action:(void(^)(UIAlertAction *))saveAction {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"New chat" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"Enter chat name here";
-    }];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:saveAction];
-    [alertController addAction:okAction];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-    [alertController addAction:cancelAction];
-    [target presentViewController:alertController animated:YES completion:nil];
++(void)showErrorAlert:(Fault *)fault target:(UIViewController *)target {
+    NSString *errorTitle = @"Error";
+    if (fault.faultCode) {
+        errorTitle = [NSString stringWithFormat:@"Error %@", fault.faultCode];
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:errorTitle message:fault.message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:dismissAction];
+    [target presentViewController:alert animated:YES completion:nil];
+}
+
++(void)showAlertWithTitle:(NSString *)title message:(NSString *)message target:(UIViewController *)target handler:(void(^)(UIAlertAction *))actionHandler {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *chatsAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:actionHandler];
+    [alert addAction:chatsAction];
+    [target presentViewController:alert animated:YES completion:nil];
 }
 
 @end
