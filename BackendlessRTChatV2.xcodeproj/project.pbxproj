@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		457C1A3502D370441FDED28E /* Pods_BackendlessRTChatV2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88DBADBBB9790C95FCD55BE5 /* Pods_BackendlessRTChatV2.framework */; };
+		5A6A97CF1FF39FC100DE5B4C /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A6A97CE1FF39FC100DE5B4C /* ChatViewController.m */; };
+		5A6A97D21FF39FFD00DE5B4C /* ChatDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A6A97D11FF39FFD00DE5B4C /* ChatDetailsViewController.m */; };
+		5AB364741FF3C3E1005D2AF1 /* MembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB364731FF3C3E1005D2AF1 /* MembersViewController.m */; };
+		5AB3647D1FF3CE3C005D2AF1 /* ChatMember.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB3647C1FF3CE3C005D2AF1 /* ChatMember.m */; };
 		5AE548FE1FF3837A00660560 /* libbkndlss-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AE548051FF3837A00660560 /* libbkndlss-simulator.a */; };
 		5E80D5571FF2F23400DBC0DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E80D5561FF2F23400DBC0DF /* AppDelegate.m */; };
 		5E80D55A1FF2F23400DBC0DF /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E80D5591FF2F23400DBC0DF /* LoginViewController.m */; };
@@ -17,15 +21,21 @@
 		5E80D5651FF2F23400DBC0DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E80D5641FF2F23400DBC0DF /* main.m */; };
 		5EDC0A3E1FF2F79C00723671 /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EDC0A3D1FF2F79C00723671 /* SplitViewController.m */; };
 		5EDC0A411FF2F7F900723671 /* ChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EDC0A401FF2F7F900723671 /* ChatsViewController.m */; };
-		5EDC0A441FF2F80800723671 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EDC0A431FF2F80800723671 /* ChatViewController.m */; };
 		5EDC0A471FF2F83800723671 /* Chat.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EDC0A461FF2F83800723671 /* Chat.m */; };
 		5EE85CBC1FF300BD00BFA6B8 /* AlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE85CBB1FF300BD00BFA6B8 /* AlertController.m */; };
-		5EE85CBF1FF3026400BFA6B8 /* ChatDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE85CBE1FF3026400BFA6B8 /* ChatDetailsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1167B4A874811BCDF65F61CB /* Pods-BackendlessRTChatV2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackendlessRTChatV2.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BackendlessRTChatV2/Pods-BackendlessRTChatV2.debug.xcconfig"; sourceTree = "<group>"; };
 		26C36E232212401CD54B7FF5 /* Pods-BackendlessRTChatV2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BackendlessRTChatV2.release.xcconfig"; path = "Pods/Target Support Files/Pods-BackendlessRTChatV2/Pods-BackendlessRTChatV2.release.xcconfig"; sourceTree = "<group>"; };
+		5A6A97CD1FF39FC100DE5B4C /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		5A6A97CE1FF39FC100DE5B4C /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		5A6A97D01FF39FFD00DE5B4C /* ChatDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailsViewController.h; sourceTree = "<group>"; };
+		5A6A97D11FF39FFD00DE5B4C /* ChatDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailsViewController.m; sourceTree = "<group>"; };
+		5AB364721FF3C3E1005D2AF1 /* MembersViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MembersViewController.h; sourceTree = "<group>"; };
+		5AB364731FF3C3E1005D2AF1 /* MembersViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MembersViewController.m; sourceTree = "<group>"; };
+		5AB3647B1FF3CE3C005D2AF1 /* ChatMember.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMember.h; sourceTree = "<group>"; };
+		5AB3647C1FF3CE3C005D2AF1 /* ChatMember.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMember.m; sourceTree = "<group>"; };
 		5AE548051FF3837A00660560 /* libbkndlss-simulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libbkndlss-simulator.a"; sourceTree = "<group>"; };
 		5AE548071FF3837A00660560 /* IArgumentObjectFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IArgumentObjectFactory.h; sourceTree = "<group>"; };
 		5AE548081FF3837A00660560 /* PublishOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublishOptions.h; sourceTree = "<group>"; };
@@ -288,14 +298,10 @@
 		5EDC0A3D1FF2F79C00723671 /* SplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
 		5EDC0A3F1FF2F7F900723671 /* ChatsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatsViewController.h; sourceTree = "<group>"; };
 		5EDC0A401FF2F7F900723671 /* ChatsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatsViewController.m; sourceTree = "<group>"; };
-		5EDC0A421FF2F80800723671 /* ChatViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
-		5EDC0A431FF2F80800723671 /* ChatViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		5EDC0A451FF2F83800723671 /* Chat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Chat.h; sourceTree = "<group>"; };
 		5EDC0A461FF2F83800723671 /* Chat.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Chat.m; sourceTree = "<group>"; };
 		5EE85CBA1FF300BD00BFA6B8 /* AlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertController.h; sourceTree = "<group>"; };
 		5EE85CBB1FF300BD00BFA6B8 /* AlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlertController.m; sourceTree = "<group>"; };
-		5EE85CBD1FF3026400BFA6B8 /* ChatDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailsViewController.h; sourceTree = "<group>"; };
-		5EE85CBE1FF3026400BFA6B8 /* ChatDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailsViewController.m; sourceTree = "<group>"; };
 		88DBADBBB9790C95FCD55BE5 /* Pods_BackendlessRTChatV2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackendlessRTChatV2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -619,6 +625,8 @@
 				5E80D5561FF2F23400DBC0DF /* AppDelegate.m */,
 				5EDC0A451FF2F83800723671 /* Chat.h */,
 				5EDC0A461FF2F83800723671 /* Chat.m */,
+				5AB3647B1FF3CE3C005D2AF1 /* ChatMember.h */,
+				5AB3647C1FF3CE3C005D2AF1 /* ChatMember.m */,
 				5E80D5641FF2F23400DBC0DF /* main.m */,
 				5E80D5631FF2F23400DBC0DF /* Info.plist */,
 				5E80D55B1FF2F23400DBC0DF /* Main.storyboard */,
@@ -639,10 +647,12 @@
 				5EDC0A3D1FF2F79C00723671 /* SplitViewController.m */,
 				5EDC0A3F1FF2F7F900723671 /* ChatsViewController.h */,
 				5EDC0A401FF2F7F900723671 /* ChatsViewController.m */,
-				5EDC0A421FF2F80800723671 /* ChatViewController.h */,
-				5EDC0A431FF2F80800723671 /* ChatViewController.m */,
-				5EE85CBD1FF3026400BFA6B8 /* ChatDetailsViewController.h */,
-				5EE85CBE1FF3026400BFA6B8 /* ChatDetailsViewController.m */,
+				5A6A97CD1FF39FC100DE5B4C /* ChatViewController.h */,
+				5A6A97CE1FF39FC100DE5B4C /* ChatViewController.m */,
+				5A6A97D01FF39FFD00DE5B4C /* ChatDetailsViewController.h */,
+				5A6A97D11FF39FFD00DE5B4C /* ChatDetailsViewController.m */,
+				5AB364721FF3C3E1005D2AF1 /* MembersViewController.h */,
+				5AB364731FF3C3E1005D2AF1 /* MembersViewController.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -785,14 +795,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AB3647D1FF3CE3C005D2AF1 /* ChatMember.m in Sources */,
 				5EE85CBC1FF300BD00BFA6B8 /* AlertController.m in Sources */,
 				5E80D55A1FF2F23400DBC0DF /* LoginViewController.m in Sources */,
 				5E80D5651FF2F23400DBC0DF /* main.m in Sources */,
-				5EE85CBF1FF3026400BFA6B8 /* ChatDetailsViewController.m in Sources */,
-				5EDC0A441FF2F80800723671 /* ChatViewController.m in Sources */,
+				5A6A97D21FF39FFD00DE5B4C /* ChatDetailsViewController.m in Sources */,
+				5AB364741FF3C3E1005D2AF1 /* MembersViewController.m in Sources */,
 				5E80D5571FF2F23400DBC0DF /* AppDelegate.m in Sources */,
 				5EDC0A3E1FF2F79C00723671 /* SplitViewController.m in Sources */,
 				5EDC0A411FF2F7F900723671 /* ChatsViewController.m in Sources */,
+				5A6A97CF1FF39FC100DE5B4C /* ChatViewController.m in Sources */,
 				5EDC0A471FF2F83800723671 /* Chat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

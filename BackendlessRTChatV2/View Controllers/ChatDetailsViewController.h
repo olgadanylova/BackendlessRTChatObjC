@@ -16,5 +16,6 @@
 
 - (IBAction)pressedSave:(id)sender;
 - (IBAction)pressedDelete:(id)sender;
+- (IBAction)pressedMembers:(id)sender;
 
 @end

@@ -1,7 +1,7 @@
 
 #import "ChatDetailsViewController.h"
 #import "AlertController.h"
-//#import "MembersViewController.h"
+#import "MembersViewController.h"
 
 @interface ChatDetailsViewController() {
     UITextField *activeField;
@@ -128,7 +128,7 @@
                                              message:[NSString stringWithFormat:@"'%@' successfully updated", updatedChat.name]
                                               target:self
                                              handler:^(UIAlertAction *alertAction) {
-                                                 [self performSegueWithIdentifier:@"UnwindToChatAfterSave" sender:nil]; 
+                                                 [self performSegueWithIdentifier:@"UnwindToChatAfterSave" sender:nil];
                                              }];
              }
              error:^(Fault *fault) {
@@ -165,13 +165,9 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"ShowMembers"]) {
-        //        MembersViewController *membersVC = [segue destinationViewController];
-        //        membersVC.channel = self.channel;
+        MembersViewController *membersVC = [segue destinationViewController];
+        membersVC.channel = self.channel;
     }
-}
-
--(IBAction)prepareForUnwindToChatDetails:(UIStoryboardSegue *)segue {
-    [self.channel removeUserStatusListener];
 }
 
 - (IBAction)pressedSave:(id)sender {
@@ -182,6 +178,10 @@
 - (IBAction)pressedDelete:(id)sender {
     [self.view endEditing:YES];
     [self deleteChat];
+}
+
+- (IBAction)pressedMembers:(id)sender {
+    [self performSegueWithIdentifier:@"ShowMembers" sender:sender];
 }
 
 @end
