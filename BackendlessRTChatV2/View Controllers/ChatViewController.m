@@ -1,7 +1,7 @@
 
 #import "ChatViewController.h"
-#import "ChatDetailsViewController.h"
 #import "AlertController.h"
+#import "ChatDetailsViewController.h"
 
 @interface ChatViewController() {
     NSTimer *searchTimer;
@@ -33,8 +33,63 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationItem.backBarButtonItem setEnabled:NO];
+    self.navigationItem.hidesBackButton = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
 -(void) viewDidLayoutSubviews {
     self.inputField.frame = CGRectMake(0, 0, self.toolbar.frame.size.width * 0.75, self.toolbar.frame.size.height * 0.75);
+}
+
+- (void)keyboardDidShow:(NSNotification *)notification {
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    [UIView animateWithDuration:0.3 animations:^{
+        CGRect f = self.view.frame;
+        f.origin.y = -keyboardSize.height;
+        self.view.frame = f;
+    }];
+}
+
+-(void)keyboardWillBeHidden:(NSNotification *)notification {
+    [UIView animateWithDuration:0.3 animations:^{
+        CGRect f = self.view.frame;
+        f.origin.y = 0.0f;
+        self.view.frame = f;
+    }];
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
+
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                             selector:@selector(getHintsFromTextView:)
+                                               object:textView];
+    [self performSelector:@selector(getHintsFromTextView:) withObject:textView afterDelay:0.5];
+    return YES;
+}
+
+-(void)getHintsFromTextView:(UITextView *)textView {
+    if (textView.text.length > 0) {
+        [backendless.messaging sendCommand:@"USER_TYPING"
+                               channelName:self.channel.channelName
+                                      data:nil
+                                 onSuccess:^(id result) { }
+                                   onError:^(Fault *fault) {
+                                       [AlertController showErrorAlert:fault target:self];
+                                   }];
+    }
 }
 
 -(void)addRTListeners {
@@ -81,39 +136,28 @@
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationItem.backBarButtonItem setEnabled:NO];
-    self.navigationItem.hidesBackButton = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+-(void)sendUserStopTyping {
+    [backendless.messaging sendCommand:@"USER_STOP_TYPING"
+                           channelName:self.channel.channelName
+                                  data:nil
+                             onSuccess:^(id result) {
+                             } onError:^(Fault *fault) {
+                                 [AlertController showErrorAlert:fault target:self];
+                             }];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-}
-
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
-}
-
-- (void)keyboardWillShow:(NSNotification *)notification {
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    [UIView animateWithDuration:0.3 animations:^{
-        CGRect f = self.view.frame;
-        f.origin.y = -keyboardSize.height;
-        self.view.frame = f;
-    }];
-}
-
--(void)keyboardWillHide:(NSNotification *)notification {
-    [UIView animateWithDuration:0.3 animations:^{
-        CGRect f = self.view.frame;
-        f.origin.y = 0.0f;
-        self.view.frame = f;
-    }];
+-(void)putFormattedMessageIntoChatViewFromUser:(NSString *)userIdentity messageText:(NSString *)messageText {
+    NSMutableAttributedString *user = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", userIdentity]];
+    [user addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:15] range:NSMakeRange(0, user.length)];
+    
+    NSMutableAttributedString *message = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n\n", messageText]];
+    [message addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, message.length)];
+    [user appendAttributedString:message];
+    
+    NSMutableAttributedString *textViewString = (NSMutableAttributedString *)[self.chatField.attributedText mutableCopy];
+    [textViewString appendAttributedString:user];
+    
+    self.chatField.attributedText = textViewString;
 }
 
 -(void)setupToolbarItems {
@@ -136,24 +180,8 @@
     }
 }
 
--(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                             selector:@selector(getHintsFromTextView:)
-                                               object:textView];
-    [self performSelector:@selector(getHintsFromTextView:) withObject:textView afterDelay:0.5];
-    return YES;
-}
-
--(void)getHintsFromTextView:(UITextView *)textView {
-    if (textView.text.length > 0) {
-        [backendless.messaging sendCommand:@"USER_TYPING"
-                               channelName:self.channel.channelName
-                                      data:nil
-                                 onSuccess:^(id result) { }
-                                   onError:^(Fault *fault) {
-                                       [AlertController showErrorAlert:fault target:self];
-                                   }];
-    }
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.inputField resignFirstResponder];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -166,8 +194,24 @@
     }
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.inputField resignFirstResponder];
+-(IBAction)prepareForUnwindToChatVCAfterDelete:(UIStoryboardSegue *)segue {
+    self.chat = nil;
+    self.navigationItem.title = nil;
+    self.chatField.text = @"";
+    self.userTypingLabel.hidden = YES;
+    [self.leaveChatButton setEnabled:NO];
+    [self.detailsButton setEnabled:NO];
+    [self.textButton setEnabled:NO];
+}
+
+-(IBAction)prepareForUnwindToChatVCAfterSave:(UIStoryboardSegue *)segue {
+    ChatDetailsViewController *chatDetailsVC = (ChatDetailsViewController *)segue.sourceViewController;
+    self.chat = chatDetailsVC.chat;
+    self.navigationItem.title = self.chat.name;
+    self.userTypingLabel.hidden = YES;
+    [self.leaveChatButton setEnabled:YES];
+    [self.detailsButton setEnabled:YES];
+    [self.textButton setEnabled:YES];
 }
 
 - (IBAction)pressedSend:(id)sender {
@@ -193,50 +237,6 @@
 
 - (IBAction)pressedDetails:(id)sender {
     [self performSegueWithIdentifier:@"ShowChatDetails" sender:sender];
-}
-
--(void)sendUserStopTyping {
-    [backendless.messaging sendCommand:@"USER_STOP_TYPING"
-                           channelName:self.channel.channelName
-                                  data:nil
-                             onSuccess:^(id result) {
-                             } onError:^(Fault *fault) {
-                                 [AlertController showErrorAlert:fault target:self];
-                             }];
-}
-
--(void)putFormattedMessageIntoChatViewFromUser:(NSString *)userIdentity messageText:(NSString *)messageText {
-    NSMutableAttributedString *user = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", userIdentity]];
-    [user addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:15] range:NSMakeRange(0, user.length)];
-    
-    NSMutableAttributedString *message = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n\n", messageText]];
-    [message addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, message.length)];
-    [user appendAttributedString:message];
-    
-    NSMutableAttributedString *textViewString = (NSMutableAttributedString *)[self.chatField.attributedText mutableCopy];
-    [textViewString appendAttributedString:user];
-    
-    self.chatField.attributedText = textViewString;
-}
-
--(IBAction)prepareForUnwindToChatVCAfterDelete:(UIStoryboardSegue *)segue {
-    self.chat = nil;
-    self.navigationItem.title = nil;
-    self.chatField.text = @"";
-    self.userTypingLabel.hidden = YES;
-    [self.leaveChatButton setEnabled:NO];
-    [self.detailsButton setEnabled:NO];
-    [self.textButton setEnabled:NO];
-}
-
--(IBAction)prepareForUnwindToChatVCAfterSave:(UIStoryboardSegue *)segue {
-    ChatDetailsViewController *chatDetailsVC = (ChatDetailsViewController *)segue.sourceViewController;
-    self.chat = chatDetailsVC.chat;
-    self.navigationItem.title = self.chat.name;
-    self.userTypingLabel.hidden = YES;
-    [self.leaveChatButton setEnabled:YES];
-    [self.detailsButton setEnabled:YES];
-    [self.textButton setEnabled:YES];
 }
 
 @end

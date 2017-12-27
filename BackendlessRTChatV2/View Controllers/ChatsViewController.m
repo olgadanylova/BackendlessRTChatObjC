@@ -1,9 +1,7 @@
 
 #import "ChatsViewController.h"
-#import "ChatViewController.h"
-#import "ChatDetailsViewController.h"
 #import "AlertController.h"
-#import "LoginViewController.h"
+#import "ChatViewController.h"
 #import "Backendless.h"
 
 @interface ChatsViewController() {
@@ -70,6 +68,20 @@
     }
 }
 
+-(IBAction)prepareForUnwindToChatsVC:(UIStoryboardSegue *)segue {
+    ChatViewController *chatVC = (ChatViewController *)segue.sourceViewController;
+    chatVC.navigationItem.title = @"";
+    chatVC.chatField.text = @"";
+    chatVC.inputField.text = @"";
+    chatVC.userTypingLabel.hidden = YES;
+    [chatVC.leaveChatButton setEnabled:NO];
+    [chatVC.detailsButton setEnabled:NO];
+    [chatVC.textButton setEnabled:NO];
+    [chatVC.sendButton setEnabled:NO];
+    Channel *channelToLeave = chatVC.channel;
+    [channelToLeave disconnect];
+}
+
 - (IBAction)addNewChat:(id)sender {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"New chat" message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
@@ -89,20 +101,6 @@
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     [alertController addAction:cancelAction];
     [self presentViewController:alertController animated:YES completion:nil];
-}
-
--(IBAction)prepareForUnwindToChatsVC:(UIStoryboardSegue *)segue {
-    ChatViewController *chatVC = (ChatViewController *)segue.sourceViewController;
-    chatVC.navigationItem.title = @"";
-    chatVC.chatField.text = @"";
-    chatVC.inputField.text = @"";
-    chatVC.userTypingLabel.hidden = YES;
-    [chatVC.leaveChatButton setEnabled:NO];
-    [chatVC.detailsButton setEnabled:NO];
-    [chatVC.textButton setEnabled:NO];
-    [chatVC.sendButton setEnabled:NO];
-    Channel *channelToLeave = chatVC.channel;
-    [channelToLeave disconnect];
 }
 
 @end

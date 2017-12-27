@@ -1,6 +1,5 @@
 
 #import <UIKit/UIKit.h>
-#import "ChatsViewController.h"
 #import "Chat.h"
 #import "Backendless.h"
 

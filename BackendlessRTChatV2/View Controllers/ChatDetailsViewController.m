@@ -1,8 +1,7 @@
 
 #import "ChatDetailsViewController.h"
-#import "ChatsViewController.h"
-//#import "MembersViewController.h"
 #import "AlertController.h"
+//#import "MembersViewController.h"
 
 @interface ChatDetailsViewController() {
     UITextField *activeField;
@@ -31,14 +30,6 @@
     singleTapGestureRecognizer.enabled = YES;
     singleTapGestureRecognizer.cancelsTouchesInView = NO;
     [self.scrollView addGestureRecognizer:singleTapGestureRecognizer];
-}
-
-- (void)singleTap:(UITapGestureRecognizer *)gesture {
-    [self.view endEditing:YES];
-}
-
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -71,6 +62,19 @@
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
 
+- (void)singleTap:(UITapGestureRecognizer *)gesture {
+    [self.view endEditing:YES];
+}
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
+
+- (void)resignKeyboard{
+    [self.view endEditing:YES];
+}
+
+
 -(void)chatNameFieldDidChange:(UITextField *)textField {
     if (textField.text.length > 0) {
         if (![textField.text isEqualToString:self.chat.name]) {
@@ -85,10 +89,18 @@
     }
 }
 
-- (void)resignKeyboard{
-    [self.view endEditing:YES];
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    UIToolbar *toolbar = [[UIToolbar alloc]init];
+    [toolbar setBarStyle:UIBarStyleDefault];
+    [toolbar setTranslucent:YES];
+    UIBarButtonItem *fixedItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc]initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(saveChat)];
+    [toolbar setItems:@[fixedItem, saveButton]];
+    [toolbar setUserInteractionEnabled:YES];
+    [toolbar sizeToFit];
+    [textField setInputAccessoryView:toolbar];
+    return YES;
 }
-
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     activeField = textField;
@@ -158,6 +170,10 @@
     }
 }
 
+-(IBAction)prepareForUnwindToChatDetails:(UIStoryboardSegue *)segue {
+    [self.channel removeUserStatusListener];
+}
+
 - (IBAction)pressedSave:(id)sender {
     [self.view endEditing:YES];
     [self saveChat];
@@ -166,10 +182,6 @@
 - (IBAction)pressedDelete:(id)sender {
     [self.view endEditing:YES];
     [self deleteChat];
-}
-
--(IBAction)prepareForUnwindToChatDetails:(UIStoryboardSegue *)segue {
-    [self.channel removeUserStatusListener];
 }
 
 @end

@@ -1,7 +1,6 @@
 
 #import "LoginViewController.h"
 #import "AlertController.h"
-#import "SplitViewController.h"
 #import "Backendless.h"
 
 #define HOST_URL @"http://localhost:9000"
@@ -50,18 +49,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
--(void)showChats {
-    [self performSegueWithIdentifier:@"ShowChats" sender:nil];
-}
-
-- (void)singleTap:(UITapGestureRecognizer *)gesture {
-    [self.view endEditing:YES];
-}
-
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
-}
-
 -(void)keyboardDidShow:(NSNotification *)notification {
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, keyboardRect.size.height, 0);
@@ -78,6 +65,18 @@
     UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
+}
+
+-(void)showChats {
+    [self performSegueWithIdentifier:@"ShowChats" sender:nil];
+}
+
+- (void)singleTap:(UITapGestureRecognizer *)gesture {
+    [self.view endEditing:YES];
+}
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -98,6 +97,13 @@
         [textField resignFirstResponder];
     }
     return NO;
+}
+
+-(IBAction)prepareForUnwindToLoginVC:(UIStoryboardSegue *)segue {
+    [backendless.userService logout:^(id loggedOut) {
+    } error:^(Fault *fault) {
+        [AlertController showErrorAlert:fault target:self];
+    }];
 }
 
 - (IBAction)pressedLogin:(id)sender {
@@ -128,13 +134,6 @@
                                  } error:^(Fault *fault) {
                                      [AlertController showErrorAlert:fault target:self];
                                  }];
-}
-
--(IBAction)prepareForUnwindToLoginVC:(UIStoryboardSegue *)segue {
-    [backendless.userService logout:^(id loggedOut) {
-    } error:^(Fault *fault) {
-        [AlertController showErrorAlert:fault target:self];
-    }];
 }
 
 @end
