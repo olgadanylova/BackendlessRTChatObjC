@@ -10,7 +10,6 @@
 @end
 
 @implementation ChatsViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 }

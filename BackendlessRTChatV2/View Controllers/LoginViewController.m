@@ -37,19 +37,27 @@
     [self.scrollView addGestureRecognizer:singleTapGestureRecognizer];
 }
 
--(void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 }
 
--(void)viewDidDisappear:(BOOL)animated {
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
--(void)keyboardDidShow:(NSNotification *)notification {
+- (void)showChats {
+    [self performSegueWithIdentifier:@"ShowChats" sender:nil];
+}
+
+- (void)singleTap:(UITapGestureRecognizer *)gesture {
+    [self.view endEditing:YES];
+}
+
+- (void)keyboardDidShow:(NSNotification *)notification {
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, keyboardRect.size.height, 0);
     self.scrollView.contentInset = contentInsets;
@@ -67,28 +75,20 @@
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
 
--(void)showChats {
-    [self performSegueWithIdentifier:@"ShowChats" sender:nil];
-}
-
-- (void)singleTap:(UITapGestureRecognizer *)gesture {
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
 
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
-}
-
--(void)textFieldDidBeginEditing:(UITextField *)textField {
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
     activeField = textField;
 }
 
--(void)textFieldDidEndEditing:(UITextField *)textField {
+- (void)textFieldDidEndEditing:(UITextField *)textField {
     [textField resignFirstResponder];
     activeField = nil;
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if ([self.passwordField.superview viewWithTag:textField.tag + 1]) {
         UITextField *nextField = [self.passwordField.superview viewWithTag:textField.tag + 1];
         [nextField becomeFirstResponder];
@@ -99,7 +99,7 @@
     return NO;
 }
 
--(IBAction)prepareForUnwindToLoginVC:(UIStoryboardSegue *)segue {
+- (IBAction)prepareForUnwindToLoginVC:(UIStoryboardSegue *)segue {
     [backendless.userService logout:^(id loggedOut) {
     } error:^(Fault *fault) {
         [AlertController showErrorAlert:fault target:self];
