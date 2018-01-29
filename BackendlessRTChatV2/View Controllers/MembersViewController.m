@@ -61,8 +61,7 @@
                     member.identity = user.email;
                     member.status = ONLINE_STATUS;
                     [weakMembers addObject: member];
-                }
-                
+                }                
             }
         }
         else if ([userStatus.status isEqualToString:DISCONNECTED_STATUS]) {
@@ -95,14 +94,12 @@
     ChatMember *member = [[members allObjects] objectAtIndex:indexPath.row];
     cell.textLabel.text = member.identity;
     cell.detailTextLabel.text = member.status;
-    
     if ([member.status isEqualToString:OFFLINE_STATUS]) {
         cell.detailTextLabel.textColor = [UIColor redColor];
     }
     else if ([member.status isEqualToString:ONLINE_STATUS]) {
         cell.detailTextLabel.textColor = [UIColor blueColor];
     }
-    
     return cell;
 }
 

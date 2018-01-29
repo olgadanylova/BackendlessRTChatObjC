@@ -4,7 +4,6 @@
 #import "ChatDetailsViewController.h"
 
 @interface ChatViewController() {
-    NSTimer *searchTimer;
     NSMutableSet *usersTyping;
 }
 @end
@@ -153,8 +152,8 @@
                                       data:nil
                                  onSuccess:^(id result) {
                                  } onError:^(Fault *fault) {
-                                       [AlertController showErrorAlert:fault target:self];
-                                   }];
+                                     [AlertController showErrorAlert:fault target:self];
+                                 }];
     }
 }
 
@@ -230,7 +229,6 @@
                           } error:^(Fault *fault) {
                               [AlertController showErrorAlert:fault target:self];
                           }];
-    
 }
 
 - (IBAction)pressedDetails:(id)sender {

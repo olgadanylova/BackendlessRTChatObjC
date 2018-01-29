@@ -44,6 +44,24 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
+-(void)chatNameFieldDidChange:(UITextField *)textField {
+    if (textField.text.length > 0) {
+        if (![textField.text isEqualToString:self.chat.name]) {
+            [self.saveButton setEnabled:YES];
+        }
+        else {
+            [self.saveButton setEnabled:NO];
+        }
+    }
+    else {
+        [self.saveButton setEnabled:NO];
+    }
+}
+
+- (void)singleTap:(UITapGestureRecognizer *)gesture {
+    [self.view endEditing:YES];
+}
+
 -(void)keyboardDidShow:(NSNotification *)notification {
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, keyboardRect.size.height, 0);
@@ -62,32 +80,13 @@
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
 
-- (void)singleTap:(UITapGestureRecognizer *)gesture {
-    [self.view endEditing:YES];
-}
-
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
 
-- (void)resignKeyboard{
-    [self.view endEditing:YES];
-}
-
-
--(void)chatNameFieldDidChange:(UITextField *)textField {
-    if (textField.text.length > 0) {
-        if (![textField.text isEqualToString:self.chat.name]) {
-            [self.saveButton setEnabled:YES];
-        }
-        else {
-            [self.saveButton setEnabled:NO];
-        }
-    }
-    else {
-        [self.saveButton setEnabled:NO];
-    }
-}
+//- (void)resignKeyboard{
+//    [self.view endEditing:YES];
+//}
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     UIToolbar *toolbar = [[UIToolbar alloc]init];
@@ -118,7 +117,6 @@
 
 -(void)saveChat {
     if (self.chatNameField.text.length > 0) {
-        
         if (![self.chatNameField.text isEqualToString:self.chat.name]) {
             self.chat.name = self.chatNameField.text;
             [[backendless.data of:[Chat class]]
@@ -150,7 +148,7 @@
     NSString *name = self.chat.name;
     [[backendless.data of:[Chat class]]
      remove:self.chat
-     response:^(NSNumber *removedChat) {
+     response:^(NSNumber *deletedChat) {
          [AlertController showAlertWithTitle:@"Chat deleted"
                                      message:[NSString stringWithFormat:@"'%@' successfully deleted", name]
                                       target:self

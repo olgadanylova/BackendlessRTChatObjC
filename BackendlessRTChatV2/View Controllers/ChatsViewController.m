@@ -14,14 +14,14 @@
     [super viewDidLoad];
 }
 
--(void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self retrieveChats];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{ [self addRTListeners]; });
 }
 
--(void)retrieveChats {
+- (void)retrieveChats {
     [[backendless.data of:[Chat class]] find:^(NSArray *retrievedChats) {
         NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
         chats = [NSMutableArray arrayWithArray:[retrievedChats sortedArrayUsingDescriptors:[NSArray arrayWithObject:valueDescriptor]]];
@@ -31,14 +31,14 @@
     }];
 }
 
--(void)addRTListeners {
+- (void)addRTListeners {
     RTDataStore *chatStore = [backendless.rt.data of:[Chat class]];
     [chatStore addErrorListener:^(Fault *fault) { [AlertController showErrorAlert:fault target:self]; }];
     [chatStore addCreateListener:^(Chat *createdChat) { [self retrieveChats]; }];
     [chatStore addUpdateListener:^(Chat *updatedChat) { [self retrieveChats]; }];
     [chatStore addDeleteListener:^(Chat *deletedChat) { [self retrieveChats]; }];
 }
-
+    
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -67,7 +67,7 @@
     }
 }
 
--(IBAction)prepareForUnwindToChatsVC:(UIStoryboardSegue *)segue {
+- (IBAction)prepareForUnwindToChatsVC:(UIStoryboardSegue *)segue {
     ChatViewController *chatVC = (ChatViewController *)segue.sourceViewController;
     chatVC.navigationItem.title = @"";
     chatVC.chatField.text = @"";
@@ -77,8 +77,7 @@
     [chatVC.detailsButton setEnabled:NO];
     [chatVC.textButton setEnabled:NO];
     [chatVC.sendButton setEnabled:NO];
-    Channel *channelToLeave = chatVC.channel;
-    [channelToLeave disconnect];
+    [chatVC.channel disconnect];
 }
 
 - (IBAction)addNewChat:(id)sender {
