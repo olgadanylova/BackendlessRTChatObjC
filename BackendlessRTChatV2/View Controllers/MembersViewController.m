@@ -51,17 +51,17 @@
             for (NSString *userId in connectedMembers) {
                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userId = %@", userId];
                 ChatMember *member = [[weakMembers allObjects] filteredArrayUsingPredicate:predicate].firstObject;
-                if (member) {
-                    member.status = ONLINE_STATUS;
-                }
-                else {
+                if (!member) {
                     BackendlessUser *user = [backendless.userService findById:userId];
                     ChatMember *member = [ChatMember new];
                     member.userId = user.objectId;
                     member.identity = user.email;
                     member.status = ONLINE_STATUS;
                     [weakMembers addObject: member];
-                }                
+                }
+                else {
+                    member.status = ONLINE_STATUS;
+                }
             }
         }
         else if ([userStatus.status isEqualToString:DISCONNECTED_STATUS]) {
@@ -76,9 +76,10 @@
                     member.status = OFFLINE_STATUS;
                 }
             }
-        }        
+        }
         [weakSelf.tableView reloadData];
     }];
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

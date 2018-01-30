@@ -19,8 +19,14 @@
     
     self.navigationItem.title = [self.chat.name stringByAppendingString:@" Details"];
     self.chatNameField.text = self.chat.name;
+    self.chatNameField.returnKeyType = UIReturnKeyDone;
+    
+    [self.saveButton setEnabled:NO];
+    [self.deleteButton setEnabled:NO];
+    [self.chatNameField setEnabled:NO];
     
     if ([self.chat.ownerId isEqualToString:backendless.userService.currentUser.objectId]) {
+        [self.saveButton setEnabled:YES];
         [self.deleteButton setEnabled:YES];
         [self.chatNameField setEnabled:YES];
     }
@@ -84,23 +90,6 @@
     [self.view endEditing:YES];
 }
 
-//- (void)resignKeyboard{
-//    [self.view endEditing:YES];
-//}
-
--(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    UIToolbar *toolbar = [[UIToolbar alloc]init];
-    [toolbar setBarStyle:UIBarStyleDefault];
-    [toolbar setTranslucent:YES];
-    UIBarButtonItem *fixedItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc]initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(saveChat)];
-    [toolbar setItems:@[fixedItem, saveButton]];
-    [toolbar setUserInteractionEnabled:YES];
-    [toolbar sizeToFit];
-    [textField setInputAccessoryView:toolbar];
-    return YES;
-}
-
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     activeField = textField;
 }
@@ -134,12 +123,10 @@
              }];
         }
         else if ([self.chatNameField.text isEqualToString:self.chat.name]) {
-            Fault *fault = [Fault fault:@"Please change the chat before saving"];
-            [AlertController showErrorAlert:fault target:self];
+            [AlertController showAlertWithTitle:@"Update failed" message:@"Please change the chat before saving" target:self handler:nil];
         }
         else if (self.chatNameField.text.length == 0) {
-            Fault *fault = [Fault fault:@"Please enter the correct chat name"];
-            [AlertController showErrorAlert:fault target:self];
+            [AlertController showAlertWithTitle:@"Update failed" message:@"Please enter the correct chat name" target:self handler:nil];
         }
     }
 }

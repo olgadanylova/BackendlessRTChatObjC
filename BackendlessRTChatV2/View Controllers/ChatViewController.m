@@ -199,6 +199,9 @@
     [self.leaveChatButton setEnabled:NO];
     [self.detailsButton setEnabled:NO];
     [self.textButton setEnabled:NO];
+    if (self.splitViewController.isCollapsed) {
+        [self performSegueWithIdentifier:@"UnwindToChats" sender:nil];
+    }
 }
 
 - (IBAction)prepareForUnwindToChatVCAfterSave:(UIStoryboardSegue *)segue {

@@ -95,6 +95,7 @@
     }
     else {
         [textField resignFirstResponder];
+        [self.view endEditing:YES];
     }
     return NO;
 }
@@ -128,7 +129,7 @@
     newUser.password = self.passwordField.text;
     [backendless.userService registerUser:newUser
                                  response:^(BackendlessUser *registeredUser) {
-                                     [AlertController showAlertWithTitle:@"Registration complete" message:[NSString stringWithFormat:@"You have been ergistered as %@", registeredUser.email] target:self handler:^(UIAlertAction *alertAction) {
+                                     [AlertController showAlertWithTitle:@"Registration complete" message:[NSString stringWithFormat:@"You have been registered as %@", registeredUser.email] target:self handler:^(UIAlertAction *alertAction) {
                                          [self showChats];
                                      }];
                                  } error:^(Fault *fault) {

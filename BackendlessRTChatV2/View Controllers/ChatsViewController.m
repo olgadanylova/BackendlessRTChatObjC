@@ -12,11 +12,11 @@
 @implementation ChatsViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self retrieveChats];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self retrieveChats];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{ [self addRTListeners]; });
 }
