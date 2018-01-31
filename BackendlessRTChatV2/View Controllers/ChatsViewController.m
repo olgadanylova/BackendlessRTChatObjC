@@ -10,9 +10,12 @@
 @end
 
 @implementation ChatsViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self retrieveChats];
+    self.navigationItem.title = backendless.userService.currentUser.email;
+    [backendless.rt addConnectErrorEventListener:^(NSString *error) { NSLog(@"Failed to connect to RT server: %@", error); }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
