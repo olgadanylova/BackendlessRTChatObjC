@@ -11,6 +11,8 @@
 
 @interface MembersViewController() {
     NSMutableSet *members;
+    void(^onUserStatus)(UserStatusObject *);
+    void(^onError)(Fault *);
 }
 @end
 
@@ -18,18 +20,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self addRTListeners];
     self.navigationItem.title = @"Members";
-}
-
--(void)addRTListeners {
     members = [NSMutableSet new];
-    __weak NSMutableSet *weakMembers = members;
     __weak MembersViewController *weakSelf = self;
+    __weak NSMutableSet *weakMembers = members;
     
-    [self.channel addErrorListener:^(Fault *fault) { [AlertController showErrorAlert:fault target:weakSelf]; }];
-    
-    [self.channel addUserStatusListener:^(UserStatusObject *userStatus) {
+    onUserStatus = ^(UserStatusObject *userStatus) {
         if ([userStatus.status isEqualToString:LISTING_STATUS]) {
             NSMutableSet *listingMembers = [NSMutableSet new];
             for (NSDictionary *data in userStatus.data) {
@@ -41,7 +37,7 @@
                 member.userId = user.objectId;
                 member.identity = user.email;
                 member.status = ONLINE_STATUS;
-                [weakMembers addObject: member];
+                [weakMembers addObject:member];
             }
         }
         else if ([userStatus.status isEqualToString:CONNECTED_STATUS]) {
@@ -79,8 +75,24 @@
             }
         }
         [weakSelf.tableView reloadData];
-    }];
+    };
     
+    onError = ^(Fault *fault) { [AlertController showErrorAlert:fault target:weakSelf handler:nil]; };
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self addRTListeners];
+}
+
+- (void)didMoveToParentViewController:(UIViewController *)parent {
+    if (![parent isEqual:self.parentViewController]) {
+        [self.channel removeUserStatusListeners:onUserStatus];
+    }
+}
+
+-(void)addRTListeners {
+    [self.channel addUserStatusListener:onUserStatus error:onError];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

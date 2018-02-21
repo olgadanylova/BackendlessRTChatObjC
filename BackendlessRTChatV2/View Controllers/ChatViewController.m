@@ -5,6 +5,7 @@
 
 @interface ChatViewController() {
     NSMutableSet *usersTyping;
+    void(^onError)(Fault *);
 }
 @end
 
@@ -12,6 +13,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    __weak ChatViewController *weakSelf = self;
+    onError = ^(Fault *fault) { [AlertController showErrorAlert:fault target:weakSelf handler:^(UIAlertAction  *errorAction) {
+        if (weakSelf.splitViewController.isCollapsed) {
+            [weakSelf performSegueWithIdentifier:@"UnwindToChats" sender:nil];
+        }
+    }]; };
+    
     usersTyping = [NSMutableSet new];
     self.navigationItem.title = self.chat.name;
     self.userTypingLabel.hidden = YES;
@@ -25,9 +34,6 @@
         [self.detailsButton setEnabled:YES];
         [self.textButton setEnabled:YES];
         self.channel = [backendless.messaging subscribe:self.chat.objectId];
-        if (!self.channel.isConnected) {
-            [self.channel connect];
-        }
         [self addRTListeners];
     }
 }
@@ -64,11 +70,13 @@
     __weak ChatViewController *weakSelf = self;
     __weak NSMutableSet *weakUsersTyping = usersTyping;
     
+    [self.channel addConnectListener:^{ } error:onError];
+    
     [self.channel addMessageListener:^(Message *message) {
         NSString *userIdentity = [message.headers valueForKey:@"publisherEmail"];
         NSString *messageText = [message.headers valueForKey:@"messageText"];
         [weakSelf putFormattedMessageIntoChatViewFromUser:userIdentity messageText:messageText];
-    }];
+    } error:onError];
     
     [self.channel addCommandListener:^(CommandObject *typing) {
         if ([typing.type isEqualToString:@"USER_TYPING"]) {
@@ -101,7 +109,7 @@
                 weakSelf.userTypingLabel.text = [NSString stringWithFormat:@"%@ typing...", usersTypingString];
             }
         }
-    }];
+    } error:onError];
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification {
@@ -151,9 +159,7 @@
                                channelName:self.channel.channelName
                                       data:nil
                                  onSuccess:^(id result) {
-                                 } onError:^(Fault *fault) {
-                                     [AlertController showErrorAlert:fault target:self];
-                                 }];
+                                 } onError:onError];
     }
 }
 
@@ -162,9 +168,7 @@
                            channelName:self.channel.channelName
                                   data:nil
                              onSuccess:^(id result) {
-                             } onError:^(Fault *fault) {
-                                 [AlertController showErrorAlert:fault target:self];
-                             }];
+                             } onError:onError];
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
@@ -229,9 +233,7 @@
                               [self.sendButton setEnabled:NO];
                               [self.view endEditing:YES];
                               [self sendUserStopTyping];
-                          } error:^(Fault *fault) {
-                              [AlertController showErrorAlert:fault target:self];
-                          }];
+                          } error:onError];
 }
 
 - (IBAction)pressedDetails:(id)sender {

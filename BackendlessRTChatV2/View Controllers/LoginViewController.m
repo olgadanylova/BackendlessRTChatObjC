@@ -3,13 +3,14 @@
 #import "AlertController.h"
 #import "Backendless.h"
 
-#define HOST_URL @"http://localhost:9000"
-#define APP_ID @"A9D1448F-6BBE-97DC-FFC8-B4F8FD449B00"
-#define API_KEY @"7E03B9EC-B744-DFBD-FF25-EAF950A53900"
+#define HOST_URL @"http://apitest.backendless.com"
+#define APP_ID @"A81AB58A-FC85-EF00-FFE4-1A1C0FEADB00"
+#define API_KEY @"FE202648-517E-B0A5-FF89-CBA9D7DFDD00"
 
 @interface LoginViewController() {
     NSTimer *timer;
     UITextField *activeField;
+    void(^onError)(Fault *);
 }
 @end
 
@@ -35,6 +36,9 @@
     singleTapGestureRecognizer.enabled = YES;
     singleTapGestureRecognizer.cancelsTouchesInView = NO;
     [self.scrollView addGestureRecognizer:singleTapGestureRecognizer];
+    
+    __weak LoginViewController *weakSelf = self;
+    onError = ^(Fault *fault) { [AlertController showErrorAlert:fault target:weakSelf handler:nil]; };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -101,10 +105,7 @@
 }
 
 - (IBAction)prepareForUnwindToLoginVC:(UIStoryboardSegue *)segue {
-    [backendless.userService logout:^(id loggedOut) {
-    } error:^(Fault *fault) {
-        [AlertController showErrorAlert:fault target:self];
-    }];
+    [backendless.userService logout:^(id loggedOut) { } error:onError];
 }
 
 - (IBAction)pressedLogin:(id)sender {
@@ -118,9 +119,7 @@
                           password:self.passwordField.text
                           response:^(BackendlessUser *currentUser) {
                               [self showChats];
-                          } error:^(Fault *fault) {
-                              [AlertController showErrorAlert:fault target:self];
-                          }];
+                          } error:onError];
 }
 
 - (IBAction)pressedSignUp:(id)sender {
@@ -132,9 +131,7 @@
                                      [AlertController showAlertWithTitle:@"Registration complete" message:[NSString stringWithFormat:@"You have been registered as %@", registeredUser.email] target:self handler:^(UIAlertAction *alertAction) {
                                          [self showChats];
                                      }];
-                                 } error:^(Fault *fault) {
-                                     [AlertController showErrorAlert:fault target:self];
-                                 }];
+                                 } error:onError];
 }
 
 @end

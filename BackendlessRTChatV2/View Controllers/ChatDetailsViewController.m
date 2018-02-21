@@ -2,9 +2,11 @@
 #import "ChatDetailsViewController.h"
 #import "AlertController.h"
 #import "MembersViewController.h"
+#import "ChatMember.h"
 
 @interface ChatDetailsViewController() {
     UITextField *activeField;
+    void(^onError)(Fault *);
 }
 @end
 
@@ -36,6 +38,9 @@
     singleTapGestureRecognizer.enabled = YES;
     singleTapGestureRecognizer.cancelsTouchesInView = NO;
     [self.scrollView addGestureRecognizer:singleTapGestureRecognizer];
+    
+    __weak ChatDetailsViewController *weakSelf = self;
+    onError = ^(Fault *fault) { [AlertController showErrorAlert:fault target:weakSelf handler:nil]; };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -118,9 +123,7 @@
                                                  [self performSegueWithIdentifier:@"UnwindToChatAfterSave" sender:nil];
                                              }];
              }
-             error:^(Fault *fault) {
-                 [AlertController showErrorAlert:fault target:self];
-             }];
+             error:onError];
         }
         else if ([self.chatNameField.text isEqualToString:self.chat.name]) {
             [AlertController showAlertWithTitle:@"Update failed" message:@"Please change the chat before saving" target:self handler:nil];
@@ -143,9 +146,7 @@
                                          [self.channel removeAllListeners];
                                          [self performSegueWithIdentifier:@"UnwindToChatAfterDelete" sender:nil];
                                      }];
-     } error:^(Fault *fault) {
-         [AlertController showErrorAlert:fault target:self];
-     }];
+     } error:onError];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

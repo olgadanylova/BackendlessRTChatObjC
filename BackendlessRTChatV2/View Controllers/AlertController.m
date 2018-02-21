@@ -7,13 +7,13 @@
     [super viewDidLoad];
 }
 
-+(void)showErrorAlert:(Fault *)fault target:(UIViewController *)target {
++(void)showErrorAlert:(Fault *)fault target:(UIViewController *)target handler:(void (^)(UIAlertAction *))actionHandler {
     NSString *errorTitle = @"Error";
     if (fault.faultCode) {
         errorTitle = [NSString stringWithFormat:@"Error %@", fault.faultCode];
     }
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:errorTitle message:fault.message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:actionHandler];
     [alert addAction:dismissAction];
     [target presentViewController:alert animated:YES completion:nil];
 }

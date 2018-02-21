@@ -6,6 +6,7 @@
 
 @interface ChatsViewController() {
     NSMutableArray *chats;
+    void(^onError)(Fault *);
 }
 @end
 
@@ -15,7 +16,11 @@
     [super viewDidLoad];
     [self retrieveChats];
     self.navigationItem.title = backendless.userService.currentUser.email;
+    [backendless.rt addConnectEventListener:^{ NSLog(@"Connected to RT server"); }];
     [backendless.rt addConnectErrorEventListener:^(NSString *error) { NSLog(@"Failed to connect to RT server: %@", error); }];
+    
+    __weak ChatsViewController *weakSelf = self;
+    onError = ^(Fault *fault) { [AlertController showErrorAlert:fault target:weakSelf handler:nil]; };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -29,17 +34,20 @@
         NSSortDescriptor *valueDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
         chats = [NSMutableArray arrayWithArray:[retrievedChats sortedArrayUsingDescriptors:[NSArray arrayWithObject:valueDescriptor]]];
         [self.tableView reloadData];
-    } error:^(Fault *fault) {
-        [AlertController showErrorAlert:fault target:self];
-    }];
+    } error:onError];
 }
 
 - (void)addRTListeners {
-    RTDataStore *chatStore = [backendless.rt.data of:[Chat class]];
-    [chatStore addErrorListener:^(Fault *fault) { [AlertController showErrorAlert:fault target:self]; }];
-    [chatStore addCreateListener:^(Chat *createdChat) { [self retrieveChats]; }];
-    [chatStore addUpdateListener:^(Chat *updatedChat) { [self retrieveChats]; }];
-    [chatStore addDeleteListener:^(Chat *deletedChat) { [self retrieveChats]; }];
+    EventHandler *chatStore = [backendless.data of:[Chat class]].rt;
+    [chatStore addCreateListener:^(Chat *createdChat) {
+        [self retrieveChats];
+    } error:onError];
+    [chatStore addUpdateListener:^(Chat *updatedChat) {
+        [self retrieveChats];
+    } error:onError];
+    [chatStore addDeleteListener:^(Chat *deletedChat) {
+        [self retrieveChats];
+    } error:onError];
 }
     
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -94,9 +102,7 @@
         [[backendless.data of:[Chat class]]
          save:newChat
          response:^(Chat *savedChat) {
-         } error:^(Fault *fault) {
-             [AlertController showErrorAlert:fault target:self];
-         }];
+         } error:onError];
     }];
     [alertController addAction:okAction];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
