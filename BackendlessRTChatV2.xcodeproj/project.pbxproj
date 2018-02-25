@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		457C1A3502D370441FDED28E /* Pods_BackendlessRTChatV2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88DBADBBB9790C95FCD55BE5 /* Pods_BackendlessRTChatV2.framework */; };
 		5A6A97CF1FF39FC100DE5B4C /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A6A97CE1FF39FC100DE5B4C /* ChatViewController.m */; };
 		5A6A97D21FF39FFD00DE5B4C /* ChatDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A6A97D11FF39FFD00DE5B4C /* ChatDetailsViewController.m */; };
 		5AB364741FF3C3E1005D2AF1 /* MembersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB364731FF3C3E1005D2AF1 /* MembersViewController.m */; };
@@ -59,7 +58,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				457C1A3502D370441FDED28E /* Pods_BackendlessRTChatV2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,10 +408,7 @@
 				INFOPLIST_FILE = BackendlessRTChatV2/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/lib/backendless",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.backendless.BackendlessRTChatV2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -429,10 +424,7 @@
 				INFOPLIST_FILE = BackendlessRTChatV2/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/lib/backendless",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.backendless.BackendlessRTChatV2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
