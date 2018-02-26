@@ -3,7 +3,6 @@
 #import "AlertController.h"
 #import "ChatMember.h"
 
-#define LISTING_STATUS @"LISTING"
 #define CONNECTED_STATUS @"CONNECTED"
 #define DISCONNECTED_STATUS @"DISCONNECTED"
 #define ONLINE_STATUS @"online"
@@ -22,25 +21,18 @@
     [super viewDidLoad];
     self.navigationItem.title = @"Members";
     members = [NSMutableSet new];
+    
+    ChatMember *you = [ChatMember new];
+    you.userId = backendless.userService.currentUser.objectId;
+    you.identity = backendless.userService.currentUser.email;
+    you.status = ONLINE_STATUS;
+    [members addObject:you];
+    
     __weak MembersViewController *weakSelf = self;
     __weak NSMutableSet *weakMembers = members;
     
     onUserStatus = ^(UserStatusObject *userStatus) {
-        if ([userStatus.status isEqualToString:LISTING_STATUS]) {
-            NSMutableSet *listingMembers = [NSMutableSet new];
-            for (NSDictionary *data in userStatus.data) {
-                [listingMembers addObject:[data valueForKey:@"userId"]];
-            }
-            for (NSString *userId in listingMembers) {
-                BackendlessUser *user = [backendless.userService findById:userId];
-                ChatMember *member = [ChatMember new];
-                member.userId = user.objectId;
-                member.identity = user.email;
-                member.status = ONLINE_STATUS;
-                [weakMembers addObject:member];
-            }
-        }
-        else if ([userStatus.status isEqualToString:CONNECTED_STATUS]) {
+        if ([userStatus.status isEqualToString:CONNECTED_STATUS]) {
             NSMutableSet *connectedMembers = [NSMutableSet new];
             for (NSDictionary *data in userStatus.data) {
                 [connectedMembers addObject:[data valueForKey:@"userId"]];
