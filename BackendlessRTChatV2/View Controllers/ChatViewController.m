@@ -73,9 +73,8 @@
     [self.channel addConnectListener:^{ } error:onError];
     
     [self.channel addMessageListener:^(Message *message) {
-        NSString *userIdentity = [message.headers valueForKey:@"publisherEmail"];
-        NSString *messageText = [message.headers valueForKey:@"messageText"];
-        [weakSelf putFormattedMessageIntoChatViewFromUser:userIdentity messageText:messageText];
+        NSDictionary *messageInfo = [message.data valueForKey:@"message"];
+        [weakSelf putFormattedMessageIntoChatViewFromUser:[messageInfo valueForKey:@"userEmail"] messageText:[messageInfo valueForKey:@"text"]];
     } error:onError];
     
     [self.channel addCommandListener:^(CommandObject *typing) {
@@ -130,17 +129,19 @@
 }
 
 - (void)putFormattedMessageIntoChatViewFromUser:(NSString *)userIdentity messageText:(NSString *)messageText {
-    NSMutableAttributedString *user = [[NSMutableAttributedString alloc] initWithString:userIdentity];
-    [user addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:15] range:NSMakeRange(0, user.length)];
-    
-    NSMutableAttributedString *message = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n\n", messageText]];
-    [message addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, message.length)];
-    [user appendAttributedString:message];
-    
-    NSMutableAttributedString *textViewString = (NSMutableAttributedString *)[self.chatField.attributedText mutableCopy];
-    [textViewString appendAttributedString:user];
-    
-    self.chatField.attributedText = textViewString;
+    if (userIdentity && messageText) {
+        NSMutableAttributedString *user = [[NSMutableAttributedString alloc] initWithString:userIdentity];
+        [user addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:15] range:NSMakeRange(0, user.length)];
+        
+        NSMutableAttributedString *message = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n\n", messageText]];
+        [message addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(0, message.length)];
+        [user appendAttributedString:message];
+        
+        NSMutableAttributedString *textViewString = (NSMutableAttributedString *)[self.chatField.attributedText mutableCopy];
+        [textViewString appendAttributedString:user];
+        
+        self.chatField.attributedText = textViewString;
+    }    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -219,15 +220,9 @@
 }
 
 - (IBAction)pressedSend:(id)sender {
-    Message *message = [Message new];
-    
-    PublishOptions *publishOptions = [PublishOptions new];
-    [publishOptions addHeader:@"publisherEmail" value:backendless.userService.currentUser.email];
-    [publishOptions addHeader:@"messageText" value:self.inputField.text];
-    
+    NSDictionary *message = @{@"text" : self.inputField.text, @"userEmail" : backendless.userService.currentUser.email};
     [backendless.messaging publish:self.channel.channelName
                            message:message
-                    publishOptions:publishOptions
                           response:^(MessageStatus *status) {
                               self.inputField.text = @"";
                               [self.sendButton setEnabled:NO];

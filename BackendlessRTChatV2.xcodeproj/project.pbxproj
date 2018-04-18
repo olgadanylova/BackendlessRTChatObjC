@@ -50,7 +50,6 @@
 		5EDC0A461FF2F83800723671 /* Chat.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Chat.m; sourceTree = "<group>"; };
 		5EE85CBA1FF300BD00BFA6B8 /* AlertController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertController.h; sourceTree = "<group>"; };
 		5EE85CBB1FF300BD00BFA6B8 /* AlertController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlertController.m; sourceTree = "<group>"; };
-		88DBADBBB9790C95FCD55BE5 /* Pods_BackendlessRTChatV2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BackendlessRTChatV2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +68,6 @@
 			children = (
 				5E80D5541FF2F23400DBC0DF /* BackendlessRTChatV2 */,
 				5E80D5531FF2F23400DBC0DF /* Products */,
-				A3E631E82334533934664D9C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -121,14 +119,6 @@
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
-		A3E631E82334533934664D9C /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				88DBADBBB9790C95FCD55BE5 /* Pods_BackendlessRTChatV2.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,12 +126,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5E80D5681FF2F23400DBC0DF /* Build configuration list for PBXNativeTarget "BackendlessRTChatV2" */;
 			buildPhases = (
-				FB128768656D0F32CC0B2085 /* [CP] Check Pods Manifest.lock */,
 				5E80D54E1FF2F23400DBC0DF /* Sources */,
 				5E80D54F1FF2F23400DBC0DF /* Frameworks */,
 				5E80D5501FF2F23400DBC0DF /* Resources */,
-				194C8AD6B9B35EC7D1836B6A /* [CP] Embed Pods Frameworks */,
-				71556F4BC1557C0D1C9E31CB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -197,62 +184,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		194C8AD6B9B35EC7D1836B6A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-BackendlessRTChatV2/Pods-BackendlessRTChatV2-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
-				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BackendlessRTChatV2/Pods-BackendlessRTChatV2-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		71556F4BC1557C0D1C9E31CB /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BackendlessRTChatV2/Pods-BackendlessRTChatV2-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FB128768656D0F32CC0B2085 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BackendlessRTChatV2-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5E80D54E1FF2F23400DBC0DF /* Sources */ = {

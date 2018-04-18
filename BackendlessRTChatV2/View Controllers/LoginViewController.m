@@ -105,7 +105,7 @@
 }
 
 - (IBAction)prepareForUnwindToLoginVC:(UIStoryboardSegue *)segue {
-    [backendless.userService logout:^(id loggedOut) { } error:onError];
+    [backendless.userService logout:^{ } error:onError];
 }
 
 - (IBAction)pressedLogin:(id)sender {
