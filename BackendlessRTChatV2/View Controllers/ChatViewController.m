@@ -149,12 +149,14 @@
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(getHintsFromTextView:) object:textView];
-    [self performSelector:@selector(getHintsFromTextView:) withObject:textView afterDelay:0.5];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(getHintsFromTextViewWhenStartTyping:) object:textView];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(getHintsFromTextViewWhenStopTyping:) object:textView];
+    [self performSelector:@selector(getHintsFromTextViewWhenStartTyping:) withObject:textView afterDelay:0];
+    [self performSelector:@selector(getHintsFromTextViewWhenStopTyping:) withObject:textView afterDelay:1];
     return YES;
 }
 
-- (void)getHintsFromTextView:(UITextView *)textView {
+- (void)getHintsFromTextViewWhenStartTyping:(UITextView *)textView {
     if (textView.text.length > 0) {
         [backendless.messaging sendCommand:@"USER_TYPING"
                                channelName:self.channel.channelName
@@ -162,6 +164,10 @@
                                  onSuccess:^(id result) {
                                  } onError:onError];
     }
+}
+
+- (void)getHintsFromTextViewWhenStopTyping:(UITextView *)textView {
+    [self sendUserStopTyping];
 }
 
 - (void)sendUserStopTyping {
